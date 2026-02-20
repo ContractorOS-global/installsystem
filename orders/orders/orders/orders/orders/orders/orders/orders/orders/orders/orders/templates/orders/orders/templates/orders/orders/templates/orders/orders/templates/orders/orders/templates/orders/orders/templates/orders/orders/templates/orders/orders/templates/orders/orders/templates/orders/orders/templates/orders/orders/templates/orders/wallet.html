@@ -1,0 +1,44 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <h2 style="margin:0;">Кошелёк</h2>
+  <p class="muted" style="margin:8px 0 0;">
+    Баланс фирмы: <b>{{ company.balance_eur }} €</b>
+  </p>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Тип</th>
+        <th>Источник</th>
+        <th>Сумма</th>
+        <th>Заказ</th>
+        <th>Комментарий</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td class="muted">{{ e.created_at }}</td>
+        <td><span class="pill">{{ e.get_entry_type_display }}</span></td>
+        <td class="muted">{{ e.get_source_display }}</td>
+        <td>
+          {% if e.amount_eur < 0 %}
+            <span style="color:#fca5a5;">{{ e.amount_eur }} €</span>
+          {% else %}
+            <span style="color:#86efac;">+{{ e.amount_eur }} €</span>
+          {% endif %}
+        </td>
+        <td>{% if e.order %}{{ e.order.order_number }}{% else %}-{% endif %}</td>
+        <td class="muted">{{ e.comment|default:"-" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">Операций пока нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
