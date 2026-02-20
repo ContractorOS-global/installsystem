@@ -1,0 +1,31 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <h2 style="margin:0;">Загрузка PDF заказа</h2>
+  <p class="muted" style="margin:8px 0 0;">Файл попадёт в PDF Inbox (status=new). Дубликаты отсекаются по sha256.</p>
+</div>
+
+<div class="card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="msg error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form %}
+      <div style="margin-top:12px;">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="msg error" style="margin-top:8px;">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="row" style="margin-top:16px;">
+      <button class="btn" type="submit">Загрузить</button>
+      <a class="btn gray" href="{% url 'pdf_inbox' %}">Назад</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
