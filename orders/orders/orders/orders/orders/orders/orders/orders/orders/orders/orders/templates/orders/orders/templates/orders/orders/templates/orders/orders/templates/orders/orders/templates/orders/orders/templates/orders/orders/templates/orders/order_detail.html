@@ -1,0 +1,84 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <div class="row" style="justify-content:space-between;align-items:center;">
+    <div>
+      <h2 style="margin:0;">Заказ {{ order.order_number }}</h2>
+      <div class="muted" style="margin-top:6px;">
+        {{ order.date }} {{ order.time_from }}–{{ order.time_to }}
+        · Статус: <span class="pill">{{ order.get_status_display }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <a class="btn secondary" href="{% url 'delivery_edit' order.id %}">Доставка</a>
+      {% if company %}
+        <a class="btn secondary" href="{% url 'order_edit_company' order.id %}">Обновить статус</a>
+      {% endif %}
+      <a class="btn gray" href="{% url 'order_list' %}">Назад</a>
+    </div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h3 style="margin-top:0;">Клиент</h3>
+    <p><b>Имя:</b> {{ order.customer_name }}</p>
+    <p><b>Адрес:</b><br/>{{ order.address|linebreaksbr }}</p>
+    <p><b>Телефон:</b> {{ order.phone|default:"-" }}</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Документы</h3>
+    <p><b>PDF заказа:</b>
+      {% if order.source_pdf and order.source_pdf.file %}
+        <a class="btn secondary" href="{{ order.source_pdf.file.url }}" target="_blank">Открыть PDF</a>
+        <span class="muted" style="margin-left:8px;">{{ order.source_pdf.filename }}</span>
+      {% else %}
+        -
+      {% endif %}
+    </p>
+
+    <h3 style="margin-top:16px;">Финансы</h3>
+    <p><b>Base:</b> {{ order.base_price_eur }} €</p>
+    <p><b>Bonus pot:</b> {{ order.bonus_pot_eur }} €</p>
+    <p><b>Из общего контейнера:</b> {% if order.taken_from_pool %}Да{% else %}Нет{% endif %}</p>
+    <p><b>Фирма:</b> {% if order.current_company %}{{ order.current_company.name }}{% else %}-{% endif %}</p>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h3 style="margin-top:0;">Причина</h3>
+    <p><b>Категория:</b> {{ order.get_reason_category_display|default:"-" }}</p>
+    <p><b>Текст:</b><br/>{{ order.reason_text|default:"-"|linebreaksbr }}</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Фото</h3>
+    {% if order.photo %}
+      <p><a class="btn secondary" href="{{ order.photo.url }}" target="_blank">Открыть фото</a></p>
+      <img src="{{ order.photo.url }}" style="max-width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.12);" />
+    {% else %}
+      <p>-</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if company and order.status != "finished" %}
+<div class="card">
+  <h3 style="margin-top:0;">Действия фирмы</h3>
+  <div class="row">
+    <form method="post" action="{% url 'finish_order' order.id %}">
+      {% csrf_token %}
+      <button class="btn" type="submit">Завершить (начислить оплату)</button>
+    </form>
+    <form method="post" action="{% url 'reject_order' order.id %}">
+      {% csrf_token %}
+      <input name="reason" placeholder="Причина отказа (кратко)" style="max-width:320px;" />
+      <button class="btn danger" type="submit">Отказаться (штраф)</button>
+    </form>
+  </div>
+  <p class="muted" style="margin-top:10px;">Оплата начислится автоматически: base + bonus (если есть).</p>
+</div>
+{% endif %}
+{% endblock %}
