@@ -1,0 +1,30 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <h2 style="margin:0;">Обновить заказ</h2>
+  <p class="muted" style="margin:8px 0 0;">Для not_possible / storno обязательно причина и фото.</p>
+</div>
+
+<div class="card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="msg error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form %}
+      <div style="margin-top:12px;">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="msg error" style="margin-top:8px;">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="row" style="margin-top:16px;">
+      <button class="btn" type="submit">Сохранить</button>
+      <a class="btn gray" href="{% url 'order_detail' order.id %}">Назад</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
