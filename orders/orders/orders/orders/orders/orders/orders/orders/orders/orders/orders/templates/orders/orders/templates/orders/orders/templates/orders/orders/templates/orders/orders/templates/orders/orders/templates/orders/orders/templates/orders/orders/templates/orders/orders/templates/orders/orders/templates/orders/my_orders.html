@@ -1,0 +1,48 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <h2 style="margin:0;">Мои заказы</h2>
+  <p class="muted" style="margin:8px 0 0;">
+    Заказы, назначенные вашей фирме.
+  </p>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Номер</th>
+        <th>Клиент</th>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Base €</th>
+        <th>Bonus €</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><b>{{ o.order_number }}</b></td>
+        <td>{{ o.customer_name }}</td>
+        <td>{{ o.date }} {{ o.time_from }}–{{ o.time_to }}</td>
+        <td><span class="pill">{{ o.get_status_display }}</span></td>
+        <td>{{ o.base_price_eur }}</td>
+        <td>
+          {% if o.bonus_pot_eur > 0 %}
+            +{{ o.bonus_pot_eur }}
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>
+          <a class="btn secondary" href="{% url 'order_detail' o.id %}">Открыть</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">У вашей фирмы пока нет заказов.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
