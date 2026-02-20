@@ -1,0 +1,62 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <div class="row" style="justify-content:space-between;align-items:center;">
+    <h2 style="margin:0;">Заказы</h2>
+    <div class="muted">Показано до 300 последних</div>
+  </div>
+
+  <form method="get" class="row" style="margin-top:12px;">
+    <div style="flex:1;min-width:220px;">
+      <label>Поиск</label>
+      <input name="q" value="{{ q }}" placeholder="номер или клиент"/>
+    </div>
+    <div style="width:220px;">
+      <label>Статус</label>
+      <select name="status">
+        <option value="">Все</option>
+        {% for key,name in status_choices %}
+          <option value="{{ key }}" {% if status == key %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="width:160px;display:flex;align-items:flex-end;gap:10px;">
+      <button class="btn" type="submit">Фильтр</button>
+      <a class="btn gray" href="{% url 'order_list' %}">Сброс</a>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Номер</th>
+        <th>Клиент</th>
+        <th>Дата/время</th>
+        <th>Фирма</th>
+        <th>Статус</th>
+        <th>€</th>
+        <th>Bonus</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td><b>{{ o.order_number }}</b></td>
+        <td>{{ o.customer_name }}</td>
+        <td>{{ o.date }} {{ o.time_from }}–{{ o.time_to }}</td>
+        <td>{% if o.current_company %}{{ o.current_company.name }}{% else %}-{% endif %}</td>
+        <td><span class="pill">{{ o.get_status_display }}</span></td>
+        <td>{{ o.base_price_eur }}</td>
+        <td>{% if o.bonus_pot_eur > 0 %}+{{ o.bonus_pot_eur }}{% else %}-{% endif %}</td>
+        <td><a class="btn secondary" href="{% url 'order_detail' o.id %}">Открыть</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8">Нет заказов.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
