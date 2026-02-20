@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login — InstallSystem</title>
+  <style>
+    :root{ --c1:#0ea5e9; --c2:#a78bfa; --c3:#fb7185; }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; color:#fff; overflow:hidden; }
+    .scene{
+      min-height:100vh; display:grid; place-items:center; position:relative;
+      background: radial-gradient(1200px 600px at 20% 20%, rgba(167,139,250,.35), transparent 60%),
+                  radial-gradient(900px 500px at 80% 35%, rgba(14,165,233,.35), transparent 55%),
+                  radial-gradient(900px 700px at 50% 90%, rgba(251,113,133,.20), transparent 60%),
+                  linear-gradient(180deg, #070a12, #0b1020 55%, #070a12);
+    }
+    .stars::before, .stars::after{
+      content:""; position:absolute; inset:-40%;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.8), transparent 2px),
+        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.7), transparent 2px),
+        radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,.6), transparent 2px),
+        radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.7), transparent 2px),
+        radial-gradient(1px 1px at 90% 25%, rgba(255,255,255,.6), transparent 2px);
+      opacity:.35;
+      transform: rotate(10deg);
+      animation: drift 16s linear infinite;
+    }
+    .stars::after{ opacity:.20; animation-duration: 26s; filter: blur(.5px); }
+    @keyframes drift { from { transform: translate3d(0,0,0) rotate(10deg);} to { transform: translate3d(12%,8%,0) rotate(10deg);} }
+
+    .city{
+      position:absolute; left:0; right:0; bottom:-2px; height:38vh; opacity:.95;
+      background:
+        linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0)),
+        repeating-linear-gradient(to right, rgba(255,255,255,.08) 0 2px, rgba(255,255,255,0) 2px 14px);
+      mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400'><path fill='white' d='M0 400V250l60-20v-80l80-30v110l60-15V140l110-40v115l65-20V110l140-55v140l80-30V80l170-60v185l70-25V60l165-50v390H0z'/></svg>");
+      mask-size: cover; mask-repeat:no-repeat; mask-position:center bottom;
+    }
+    .neon{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(600px 140px at 50% 75%, rgba(14,165,233,.22), transparent 60%),
+        linear-gradient(90deg, rgba(14,165,233,.0), rgba(167,139,250,.35), rgba(251,113,133,.0));
+      mix-blend-mode: screen;
+      animation: pulse 5s ease-in-out infinite;
+      filter: blur(.2px);
+      opacity:.7;
+    }
+    @keyframes pulse{ 0%,100%{opacity:.55} 50%{opacity:.85} }
+
+    .card{
+      width:min(420px, 92vw);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      padding: 18px 18px 16px;
+      backdrop-filter: blur(14px);
+      position:relative;
+    }
+    .title{ display:flex; gap:10px; align-items:center; margin-bottom:14px; }
+    .badge{
+      width:34px;height:34px;border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(167,139,250,.9), rgba(14,165,233,.8));
+      box-shadow: 0 10px 30px rgba(14,165,233,.25);
+    }
+    h1{ font-size:18px; margin:0; }
+    p{ margin:6px 0 0; color: rgba(226,232,240,.85); font-size:13px; }
+    label{ font-size:12px; color: rgba(226,232,240,.9); display:block; margin:12px 0 6px; }
+    input{
+      width:100%; padding:12px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.28);
+      color:#fff; outline:none;
+    }
+    input:focus{ border-color: rgba(167,139,250,.55); box-shadow: 0 0 0 4px rgba(167,139,250,.12); }
+    .btn{
+      width:100%; margin-top:14px; padding:12px 12px;
+      border-radius: 14px; border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(90deg, rgba(14,165,233,.9), rgba(167,139,250,.9));
+      color:#fff; font-weight:600; cursor:pointer;
+    }
+    .hint{ margin-top:10px; font-size:12px; color: rgba(226,232,240,.78); }
+    .msg{ margin-top:12px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(239,68,68,.12); color:#fff; }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="stars"></div>
+    <div class="neon"></div>
+    <div class="city"></div>
+
+    <div class="card">
+      <div class="title">
+        <div class="badge"></div>
+        <div>
+          <h1>InstallSystem</h1>
+          <p>PDF Inbox • распределение • общий контейнер • бонусы и штрафы</p>
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <label>Логин</label>
+        <input name="username" required placeholder="например: dispatcher или company1"/>
+
+        <label>Пароль</label>
+        <input name="password" type="password" required placeholder="••••••••"/>
+
+        <button class="btn" type="submit">Войти</button>
+
+        {% if messages %}
+          {% for m in messages %}
+            <div class="msg">{{ m }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="hint">Фирмы работают с телефона: “Мои”, “Общий контейнер”, “Кошелёк”.</div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
