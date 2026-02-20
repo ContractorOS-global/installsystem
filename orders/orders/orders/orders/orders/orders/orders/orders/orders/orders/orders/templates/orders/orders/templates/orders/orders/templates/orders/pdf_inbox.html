@@ -1,0 +1,50 @@
+{% extends "orders/base.html" %}
+{% block content %}
+<div class="card">
+  <div class="row" style="justify-content:space-between;align-items:center;">
+    <div>
+      <h2 style="margin:0;">PDF Inbox</h2>
+      <p class="muted" style="margin:8px 0 0;">Новые PDF заказы (ещё не привязаны к заказам).</p>
+    </div>
+    <div>
+      <a class="btn" href="{% url 'pdf_upload' %}">Загрузить PDF</a>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Источник</th>
+        <th>Файл</th>
+        <th>Размер</th>
+        <th>Дата</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in docs %}
+      <tr>
+        <td><b>{{ d.id }}</b></td>
+        <td>{{ d.get_source_display }}</td>
+        <td>
+          {% if d.file %}
+            <a class="btn secondary" href="{{ d.file.url }}" target="_blank">Открыть PDF</a>
+            <div class="muted" style="margin-top:6px;">{{ d.filename }}</div>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td class="muted">{{ d.size_bytes }} bytes</td>
+        <td class="muted">{{ d.created_at }}</td>
+        <td><a class="btn" href="{% url 'pdf_create_order' d.id %}">Создать заказ</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">Пока нет новых PDF.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
