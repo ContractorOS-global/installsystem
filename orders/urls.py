@@ -1,9 +1,6 @@
 from django.urls import path
-from django.shortcuts import render
-
-def home(request):
-    return render(request, "wallet.html")
+from .views import wallet_view
 
 urlpatterns = [
-    path("", home),
+    path("", wallet_view, name="wallet"),
 ]
