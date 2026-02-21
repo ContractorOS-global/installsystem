@@ -1,8 +1,8 @@
 from django.urls import path
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def home(request):
-    return HttpResponse("InstallSystem работает 🚀")
+    return render(request, "wallet.html")
 
 urlpatterns = [
     path("", home),
