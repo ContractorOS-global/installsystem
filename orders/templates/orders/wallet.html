@@ -1,0 +1,37 @@
+{% extends "orders/base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <h2 style="margin:0;">Кошелёк</h2>
+    <p class="muted" style="margin:8px 0 0;">
+        Баланс фирмы: <b>0 €</b>
+    </p>
+</div>
+
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Источник</th>
+                <th>Сумма</th>
+                <th>Заказ</th>
+                <th>Комментарий</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>Пока нет операций</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
