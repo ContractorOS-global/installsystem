@@ -1,37 +1,56 @@
-{% extends "orders/base.html" %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>InstallSystem — Кошелёк</title>
+</head>
+<body>
+  <h1>InstallSystem</h1>
+  <hr>
 
-{% block content %}
+  <h2>Кошелёк</h2>
 
-<div class="card">
-    <h2 style="margin:0;">Кошелёк</h2>
-    <p class="muted" style="margin:8px 0 0;">
-        Баланс фирмы: <b>0 €</b>
-    </p>
-</div>
+  <p>
+    <a href="/logout/">Выйти</a>
+  </p>
 
-<div class="card">
-    <table>
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Тип</th>
-                <th>Источник</th>
-                <th>Сумма</th>
-                <th>Заказ</th>
-                <th>Комментарий</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>—</td>
-                <td>—</td>
-                <td>—</td>
-                <td>—</td>
-                <td>—</td>
-                <td>Пока нет операций</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+  {% if message %}
+    <p style="color:red;">{{ message }}</p>
+  {% endif %}
 
-{% endblock %}
+  {% if company %}
+    <p><b>Фирма:</b> {{ company.name }}</p>
+    <p><b>Баланс фирмы:</b> {{ balance }} €</p>
+  {% else %}
+    <p><b>Баланс фирмы:</b> 0 €</p>
+  {% endif %}
+
+  <table border="1" cellpadding="6" cellspacing="0">
+    <tr>
+      <th>Дата</th>
+      <th>Тип</th>
+      <th>Источник</th>
+      <th>Сумма</th>
+      <th>Заказ</th>
+      <th>Комментарий</th>
+    </tr>
+
+    {% if transactions %}
+      {% for t in transactions %}
+        <tr>
+          <td>{{ t.date }}</td>
+          <td>{{ t.type }}</td>
+          <td>{{ t.source }}</td>
+          <td>{{ t.amount }}</td>
+          <td>{{ t.order_id }}</td>
+          <td>{{ t.comment }}</td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="6">Пока нет операций</td>
+      </tr>
+    {% endif %}
+  </table>
+</body>
+</html>
