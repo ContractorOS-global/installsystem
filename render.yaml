@@ -2,7 +2,7 @@ services:
   - type: web
     name: installsystem
     env: python
-    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+    buildCommand: pip install -r requirements.txt
     startCommand: >
       python manage.py migrate &&
       python manage.py createsuperuser --noinput || true &&
