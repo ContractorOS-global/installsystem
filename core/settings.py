@@ -65,3 +65,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 if os.environ.get("RENDER"):
     DEBUG = False
+
+# --- LOGGING (show Django errors in Render logs) ---
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.server": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
