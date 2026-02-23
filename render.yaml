@@ -2,8 +2,7 @@ services:
   - type: web
     name: installsystem
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: >
-      python manage.py migrate &&
-      python manage.py createsuperuser --noinput || true &&
-      gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+
+    buildCommand: pip install -r requirements.txt && python manage.py migrate
+
+    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
